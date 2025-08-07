@@ -12,7 +12,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-export const starOn = async () => {
+export const startOn = async () => {
   try {
     await sequelize.sync();
     console.log("conexion exitosa");
