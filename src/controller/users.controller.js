@@ -4,12 +4,14 @@ export const createdUsers = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (name === "") {
-    if (typeof name !== "string")
-      return res
-        .status(401)
-        .json({ message: "solo se permiten datos de tipo string " });
+    res.status(401).json({ message: "no se permiten campos vacios" });
   }
-  if (email.trim === "") {
+  if (typeof name !== "string") {
+    return res
+      .status(401)
+      .json({ message: "solo se permiten datos de tipo string " });
+  }
+  if (email === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
 
@@ -17,7 +19,8 @@ export const createdUsers = async (req, res) => {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
   try {
-    const user = await User.create(req, body);
+    const user = await User.create(req.body);
+    // console.log(user);
     res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -35,7 +38,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getUsersById = async (req, res) => {
   try {
-    const user = User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id);
     if (user) res.json(user);
     else res.status(404).json({ message: "no se encontro al usuario" });
   } catch (err) {
@@ -45,12 +48,13 @@ export const getUsersById = async (req, res) => {
 
 export const updateUsers = async (req, res) => {
   const { email } = req.body;
+
   const emailTab = await User.findOne({ where: { email } });
-  if (emailTab === update) {
+  if (emailTab) {
     return res.json({ message: "ya existe un usuario con el mismo gmail" });
   }
   try {
-    const [update] = await User.update(res.body, {
+    const [update] = await User.update(req.body, {
       where: { id: req.params.id },
     });
     if (update) {
@@ -66,10 +70,11 @@ export const updateUsers = async (req, res) => {
 
 export const deleteUsers = async (req, res) => {
   try {
-    const deleted = User.destroy({ where: { id: req, params, id } });
-    if (deleted) res.json({ message: "se elimino usuario de forma exitosa" });
-    else res.status(404).json({ message: "usuario no encontrado" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const deleted = await User.destroy({ where: { id: req.params.id } });
+    if (deleted) {
+      res.json({ message: "se elimino usuario de forma exitosa" });
+    } else return res.status(404).json({ message: "usuario no encontrado" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
