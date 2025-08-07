@@ -1,10 +1,9 @@
 import morgan from "morgan";
-import { sequelize } from "./src/config/database";
-import dotenv from "dotenv";
+import { sequelize } from "./src/config/database.js";
+import "dotenv/config";
 import express from "express";
-import { starOn } from "./src/config/database";
+import { starOn } from "./src/config/database.js";
 
-dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
