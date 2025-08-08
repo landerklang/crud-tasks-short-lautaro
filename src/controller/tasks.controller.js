@@ -23,7 +23,7 @@ export const createTasks = async (req, res) => {
   const descriptionlengt = description.length;
   if (descriptionlengt > 100) {
     return res.status(401).json({
-      message: "no se permiten despriciones mayores a 100 caracteres",
+      message: "no se permiten descripciones mayores a 100 caracteres",
     });
   }
   if (isComplete === "") {
@@ -68,7 +68,7 @@ export const updateTask = async (req, res) => {
   if (titleTab) {
     return res
       .status(500)
-      .json({ message: "ya existe un campo con ese nombre" });
+      .json({ message: "ya existe un campo con ese titulo" });
   }
   try {
     const [update] = await Task.update(req.body, {
