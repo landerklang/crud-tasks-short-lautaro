@@ -10,9 +10,22 @@ export const createTasks = async (req, res) => {
   if (titletab) {
     return res.status(401).json({ message: "ya se utilizo este titulo" });
   }
-
+  const titlelengt = await title.length;
+  if (titlelengt > 100) {
+    return res
+      .status(401)
+      .json({ message: "no se permiten titulos mayores a 100 caracteres" });
+  }
   if (description === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
+  }
+  const descriptionlengt = await description.length;
+  if (descriptionlengt > 100) {
+    return res
+      .status(401)
+      .json({
+        message: "no se permiten despriciones mayores a 100 caracteres",
+      });
   }
   if (isComplete === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });

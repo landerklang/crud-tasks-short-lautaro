@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import User from "../models/User.models.js";
 
 export const createdUsers = async (req, res) => {
@@ -11,12 +12,31 @@ export const createdUsers = async (req, res) => {
       .status(401)
       .json({ message: "solo se permiten datos de tipo string " });
   }
+  const namelength = await name.length;
+  if (namelength > 100) {
+    return res
+      .status(401)
+      .json({ message: "no se permiten mas de 100 caracteres en el nombre" });
+  }
   if (email === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
+  }
+  const emailength = await email.length;
+  if (emailength > 100) {
+    return res
+      .status(401)
+      .json({ message: "no se permiten mas de 100 caracteres en el gmail" });
   }
 
   if (password === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
+  }
+  const passwordlength = await password.length;
+  if (passwordlength > 100) {
+    return res.status(401).json({
+      message:
+        "no se permiten en los campos de contraseña mas de 100 caracteres",
+    });
   }
   try {
     const user = await User.create(req.body);
