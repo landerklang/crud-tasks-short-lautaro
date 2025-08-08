@@ -10,7 +10,8 @@ export const createTasks = async (req, res) => {
   if (titletab) {
     return res.status(401).json({ message: "ya se utilizo este titulo" });
   }
-  const titlelengt = await title.length;
+  ///tambien puede ser asi if (title.length > 100)
+  const titlelengt = title.length;
   if (titlelengt > 100) {
     return res
       .status(401)
@@ -19,13 +20,11 @@ export const createTasks = async (req, res) => {
   if (description === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
-  const descriptionlengt = await description.length;
+  const descriptionlengt = description.length;
   if (descriptionlengt > 100) {
-    return res
-      .status(401)
-      .json({
-        message: "no se permiten despriciones mayores a 100 caracteres",
-      });
+    return res.status(401).json({
+      message: "no se permiten despriciones mayores a 100 caracteres",
+    });
   }
   if (isComplete === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });

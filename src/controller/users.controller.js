@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import User from "../models/User.models.js";
 
 export const createdUsers = async (req, res) => {
@@ -12,7 +11,7 @@ export const createdUsers = async (req, res) => {
       .status(401)
       .json({ message: "solo se permiten datos de tipo string " });
   }
-  const namelength = await name.length;
+  const namelength = name.length;
   if (namelength > 100) {
     return res
       .status(401)
@@ -21,7 +20,7 @@ export const createdUsers = async (req, res) => {
   if (email === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
-  const emailength = await email.length;
+  const emailength = email.length;
   if (emailength > 100) {
     return res
       .status(401)
@@ -31,7 +30,7 @@ export const createdUsers = async (req, res) => {
   if (password === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
-  const passwordlength = await password.length;
+  const passwordlength = password.length;
   if (passwordlength > 100) {
     return res.status(401).json({
       message:
