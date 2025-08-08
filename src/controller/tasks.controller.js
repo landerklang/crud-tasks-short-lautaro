@@ -3,18 +3,28 @@ import Task from "../models/task.models.js";
 export const createTasks = async (req, res) => {
   const { title, description, isComplete } = req.body;
 
-  if (title.trim === "") {
+  if (title === "" || title === undefined) {
     return res.status(401).json({ Message: "no se permiten campos vacios" });
   }
-  if (description.trim === "") {
+  const titletab = await Task.findOne({ where: { title } });
+  if (titletab) {
+    return res.status(401).json({ message: "ya se utilizo este titulo" });
+  }
+
+  if (description === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
   }
-  if (isComplete.trim === "") {
+  if (isComplete === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
+  }
+  if (typeof isComplete !== "boolean") {
+    return res
+      .status(401)
+      .json({ message: "solo se permiten datos verdadero o falso" });
   }
   try {
-    const task = await Task.create(req, body);
-    res.status(task);
+    const task = await Task.create(req.body);
+    res.status(201).json(task);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -42,8 +52,8 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res) => {
   const { title } = req.body;
 
-  const taskTab = await Task.findOne({ where: { title } });
-  if (taskTab) {
+  const titleTab = await Task.findOne({ where: { title } });
+  if (titleTab) {
     return res
       .status(500)
       .json({ message: "ya existe un campo con ese nombre" });

@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
 app.use(morgan("dev"));
+//no se nesesita si ya en el archivo database colocaste sync
 /* sequelize.authenticate(); */
 
 app.use("/api", userRoutes);
