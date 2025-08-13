@@ -72,6 +72,8 @@ export const updateUsers = async (req, res) => {
   if (emailTab) {
     return res.json({ message: "ya existe un usuario con el mismo gmail" });
   }
+  //({where :{email: email,id: {[Op.Ne]: req.params.id}},}): para que no tome en cuenta el id del usuario que se esta actualizando
+  //user gmail existente
   try {
     const [update] = await User.update(req.body, {
       where: { id: req.params.id },
