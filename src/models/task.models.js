@@ -1,25 +1,30 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 import User from "./user.models.js";
-const Task = sequelize.define("Task", {
-  title: { type: DataTypes.STRING(100), unique: true, allowNull: false },
-  description: { type: DataTypes.STRING(100), allowNull: false },
-  isComplete: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-    allowNull: false,
+const Tasks = sequelize.define(
+  "Tasks",
+  {
+    title: { type: DataTypes.STRING(100), unique: true, allowNull: false },
+    description: { type: DataTypes.STRING(100), allowNull: false },
+    isComplete: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
+    // },
+    // {
+    //   timestamps: false,
+    //   // createdAT: created_at,
   },
-  // },
-  // {
-  //   timestamps: false,
-  //   // createdAT: created_at,
-});
+  {
+    timestamps: false,
+  }
+);
 
-// Task.belongto(User, { foreignKey: "id" });
+Tasks.belongsTo(User, { foreignKey: "user_id", as: "author" }),
+  User.hasMany(Tasks, { foreignKey: "user_id", as: "author" });
 
-// User.hasMany(Task, { foreignKey: "id" });
-
-export default Task;
+export default Tasks;
 
 // usermodel.belongsToMany(rolemodel, {
 //   throuch: "user_role",
