@@ -1,7 +1,19 @@
 import Task from "../models/task.models.js";
+import User from "../models/user.models.js";
 
 export const createTasks = async (req, res) => {
-  const { title, description, isComplete } = req.body;
+  const { title, description, isComplete, user_id } = req.body;
+
+  if (user_id === undefined) {
+    return res.status(401).json({ message: "no se permite campos vacios" });
+  }
+  const iduser = await User.findByPk(user_id);
+  if (iduser === null) {
+    return res.status(401).json({ message: "no existe un usuario con ese id" });
+  }
+  // if (user_id === req.params.id) {
+  //   return res.status(401).json({ message: "no existe un usuario con ese id" });
+  // }
 
   if (title === "" || title === undefined) {
     return res.status(401).json({ Message: "no se permiten campos vacios" });
@@ -35,7 +47,14 @@ export const createTasks = async (req, res) => {
       .json({ message: "solo se permiten datos verdadero o falso" });
   }
   try {
-    const task = await Task.create(req.body);
+    const task = await Task.create({
+      title,
+      description,
+      isComplete,
+      user_id,
+    });
+    // si al crear coloco req.body tendra en cuenta todo lo que recibo del body,
+    // en cambio si coloco solo las propiedades que desesctruturo, ignoro completamente otros datos que pueda recibir
     res.status(201).json(task);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -44,7 +63,15 @@ export const createTasks = async (req, res) => {
 
 export const getAllTask = async (req, res) => {
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: { exclude: ["password", "email"] },
+        },
+      ],
+    });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -53,7 +80,15 @@ export const getAllTask = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const tasks = await Task.findByPk(req.params.id);
+    const tasks = await Task.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: { exclude: ["password", "email"] },
+        },
+      ],
+    });
     if (tasks) res.json(tasks);
     else res.status(404).json({ message: "no se a encontrado la tarea" });
   } catch (err) {

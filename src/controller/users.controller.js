@@ -1,4 +1,5 @@
 import User from "../models/user.models.js";
+import Task from "../models/task.models.js";
 
 export const createdUsers = async (req, res) => {
   const { name, email, password } = req.body;
@@ -48,7 +49,10 @@ export const createdUsers = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const user = await User.findAll();
+    const user = await User.findAll({
+      include: [{ model: Task, as: "author" }],
+    });
+    console.log(user.Task);
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -57,7 +61,11 @@ export const getAllUsers = async (req, res) => {
 
 export const getUsersById = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      include: [
+        { model: Task, as: "author", attributes: { exclude: ["user_id"] } },
+      ],
+    });
     if (user) res.json(user);
     else res.status(404).json({ message: "no se encontro al usuario" });
   } catch (err) {
