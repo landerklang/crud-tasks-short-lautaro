@@ -1,5 +1,5 @@
-import Valid_code from "../models/valid_code.models.js";
-import User from "../models/user.models.js";
+import ValidCodeModel from "../models/valid_code.model.js";
+import UserModel from "../models/user.model.js";
 
 export const createdValidCode = async (req, res) => {
   const { code, telefono, user_id } = req.body;
@@ -10,14 +10,18 @@ export const createdValidCode = async (req, res) => {
   if (telefono === "") {
     return res.status(500).json({ mesage: "no se permiten campos vacios" });
   }
-  const iduser = await User.findByPk(user_id);
+  const iduser = await UserModel.findByPk(user_id);
   if (!iduser) {
     return res.status(500).json({
       message: "no se encontro ningun usuario que corresponda a este codigo",
     });
   }
   try {
-    const createdcode = await Valid_code.create({ code, telefono, user_id });
+    const createdcode = await ValidCodeModel.create({
+      code,
+      telefono,
+      user_id,
+    });
     res.status(201).json(createdcode);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -26,10 +30,10 @@ export const createdValidCode = async (req, res) => {
 
 export const getAllValidcode = async (req, res) => {
   try {
-    const getvalidscode = await Valid_code.findAll({
+    const getvalidscode = await ValidCodeModel.findAll({
       include: [
         {
-          model: User,
+          model: UserModel,
           as: "person",
           attributes: { exclude: ["email", "password"] },
         },
@@ -37,6 +41,6 @@ export const getAllValidcode = async (req, res) => {
     });
     res.json(getvalidscode);
   } catch (error) {
-    res.status(500).json({ error: error.mesage });
+    res.status(500).json({ error: error.message });
   }
 };

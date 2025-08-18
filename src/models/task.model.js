@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
-import User from "./user.models.js";
-const Tasks = sequelize.define(
-  "Tasks",
+import UserModel from "./user.model.js";
+const TasksModel = sequelize.define(
+  "TasksModel",
   {
     title: { type: DataTypes.STRING(100), unique: true, allowNull: false },
     description: { type: DataTypes.STRING(100), allowNull: false },
@@ -21,10 +21,10 @@ const Tasks = sequelize.define(
   }
 );
 
-Tasks.belongsTo(User, { foreignKey: "user_id", as: "author" }),
-  User.hasMany(Tasks, { foreignKey: "user_id", as: "author" });
+TasksModel.belongsTo(UserModel, { foreignKey: "user_id", as: "author" }),
+  UserModel.hasMany(TasksModel, { foreignKey: "user_id", as: "author" });
 
-export default Tasks;
+export default TasksModel;
 
 // usermodel.belongsToMany(rolemodel, {
 //   throuch: "user_role",

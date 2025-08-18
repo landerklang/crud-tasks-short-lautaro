@@ -1,5 +1,6 @@
-import User from "../models/user.models.js";
-import Task from "../models/task.models.js";
+import UserModel from "../models/user.model.js";
+import TasksModel from "../models/task.model.js";
+import GroupModel from "../models/group.model.js";
 
 export const createdUsers = async (req, res) => {
   const { name, email, password } = req.body;
@@ -39,7 +40,7 @@ export const createdUsers = async (req, res) => {
     });
   }
   try {
-    const user = await User.create(req.body);
+    const user = await UserModel.create(req.body);
     // console.log(user);
     res.status(201).json(user);
   } catch (err) {
@@ -49,8 +50,11 @@ export const createdUsers = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const user = await User.findAll({
-      include: [{ model: Task, as: "author" }],
+    const user = await UserModel.findAll({
+      include: [
+        { model: TasksModel, as: "author" },
+        { model: GroupModel, as: "groups" },
+      ],
     });
     console.log(user.Task);
     res.json(user);
@@ -61,9 +65,13 @@ export const getAllUsers = async (req, res) => {
 
 export const getUsersById = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id, {
+    const user = await UserModel.findByPk(req.params.id, {
       include: [
-        { model: Task, as: "author", attributes: { exclude: ["user_id"] } },
+        {
+          model: TasksModel,
+          as: "author",
+          attributes: { exclude: ["user_id"] },
+        },
       ],
     });
     if (user) res.json(user);
@@ -76,18 +84,18 @@ export const getUsersById = async (req, res) => {
 export const updateUsers = async (req, res) => {
   const { email } = req.body;
 
-  const emailTab = await User.findOne({ where: { email } });
+  const emailTab = await UserModel.findOne({ where: { email } });
   if (emailTab) {
     return res.json({ message: "ya existe un usuario con el mismo gmail" });
   }
   //({where :{email: email,id: {[Op.Ne]: req.params.id}},}): para que no tome en cuenta el id del usuario que se esta actualizando
   //user gmail existente
   try {
-    const [update] = await User.update(req.body, {
+    const [update] = await UserModel.update(req.body, {
       where: { id: req.params.id },
     });
     if (update) {
-      const updatedUsers = await User.findByPk(req.params.id);
+      const updatedUsers = await UserModel.findByPk(req.params.id);
       res.json(updatedUsers);
     } else {
       res.status(404).json({ message: "usuario no encontrado" });
@@ -99,7 +107,7 @@ export const updateUsers = async (req, res) => {
 
 export const deleteUsers = async (req, res) => {
   try {
-    const deleted = await User.destroy({ where: { id: req.params.id } });
+    const deleted = await UserModel.destroy({ where: { id: req.params.id } });
     if (deleted) {
       res.json({ message: "se elimino usuario de forma exitosa" });
     } else return res.status(404).json({ message: "usuario no encontrado" });

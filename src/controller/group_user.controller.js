@@ -1,6 +1,6 @@
-import Group_User from "../models/group_user.models.js";
-import User from "../models/user.models.js";
-import Group from "../models/group.models.js";
+import GroupUserModel from "../models/group_user.model.js";
+import UserModel from "../models/user.model.js";
+import GroupModel from "../models/group.model.js";
 
 export const create_Group_User = async (req, res) => {
   const { user_id, group_id } = req.body;
@@ -10,7 +10,7 @@ export const create_Group_User = async (req, res) => {
     });
   }
   try {
-    const crear = await Group_User.create({ user_id, group_id });
+    const crear = await GroupUserModel.create({ user_id, group_id });
     res.status(201).json(crear);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -19,19 +19,23 @@ export const create_Group_User = async (req, res) => {
 
 export const getAllGroupsUser = async (req, res) => {
   try {
-    const GroupsUser = await Group_User.findAll({
-      include: {
-        model: User,
-        as: "user",
-        attributes: { exclude: ["password", "email"] },
-      },
-      include: {
-        model: Group,
-        as: "groups",
-        attributes: { exclude: ["nameGroups", "descripcion"] },
-      },
+    const groupuser = await GroupUserModel.findAll({
+      include: [
+        {
+          model: UserModel,
+          as: "user",
+          attributes: { exclude: ["password", "email"] },
+        },
+      ],
+      include: [
+        {
+          model: GroupModel,
+          as: "group",
+          attributes: { exclude: ["nameGroups", "descripcion"] },
+        },
+      ],
     });
-    res.json(GroupsUser);
+    res.json(groupuser);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

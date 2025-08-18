@@ -1,5 +1,5 @@
-import Task from "../models/task.models.js";
-import User from "../models/user.models.js";
+import TasksModel from "../models/task.model.js";
+import UserModel from "../models/user.model.js";
 
 export const createTasks = async (req, res) => {
   const { title, description, isComplete, user_id } = req.body;
@@ -7,7 +7,7 @@ export const createTasks = async (req, res) => {
   if (user_id === undefined) {
     return res.status(401).json({ message: "no se permite campos vacios" });
   }
-  const iduser = await User.findByPk(user_id);
+  const iduser = await UserModel.findByPk(user_id);
   if (iduser === null) {
     return res.status(401).json({ message: "no existe un usuario con ese id" });
   }
@@ -18,7 +18,7 @@ export const createTasks = async (req, res) => {
   if (title === "" || title === undefined) {
     return res.status(401).json({ Message: "no se permiten campos vacios" });
   }
-  const titletab = await Task.findOne({ where: { title } });
+  const titletab = await TasksModel.findOne({ where: { title } });
   if (titletab) {
     return res.status(401).json({ message: "ya se utilizo este titulo" });
   }
@@ -47,7 +47,7 @@ export const createTasks = async (req, res) => {
       .json({ message: "solo se permiten datos verdadero o falso" });
   }
   try {
-    const task = await Task.create({
+    const task = await TasksModel.create({
       title,
       description,
       isComplete,
@@ -63,10 +63,10 @@ export const createTasks = async (req, res) => {
 
 export const getAllTask = async (req, res) => {
   try {
-    const tasks = await Task.findAll({
+    const tasks = await TasksModel.findAll({
       include: [
         {
-          model: User,
+          model: UserModel,
           as: "author",
           attributes: { exclude: ["password", "email"] },
         },
@@ -80,10 +80,10 @@ export const getAllTask = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const tasks = await Task.findByPk(req.params.id, {
+    const tasks = await TasksModel.findByPk(req.params.id, {
       include: [
         {
-          model: User,
+          model: UserModel,
           as: "author",
           attributes: { exclude: ["password", "email"] },
         },
@@ -99,18 +99,18 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res) => {
   const { title } = req.body;
 
-  const titleTab = await Task.findOne({ where: { title } });
+  const titleTab = await TasksModel.findOne({ where: { title } });
   if (titleTab) {
     return res
       .status(500)
       .json({ message: "ya existe un campo con ese titulo" });
   }
   try {
-    const [update] = await Task.update(req.body, {
+    const [update] = await TasksModel.update(req.body, {
       where: { id: req.params.id },
     });
     if (update) {
-      const updatedtask = await Task.findByPk(req.params.id);
+      const updatedtask = await TasksModel.findByPk(req.params.id);
       res.json(updatedtask);
     } else {
       res.status(404).json({ message: "no se encontro la tarea " });
@@ -122,7 +122,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
-    const deleted = await Task.destroy({ where: { id: req.params.id } });
+    const deleted = await TasksModel.destroy({ where: { id: req.params.id } });
     if (deleted) {
       res.status(201).json({ message: "se elimino la tarea de forma exitosa" });
     } else return res.status(404).json({ message: "no se encontro la tarea" });

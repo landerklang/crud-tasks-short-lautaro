@@ -1,4 +1,4 @@
-import Group from "../models/group.models.js";
+import GroupModel from "../models/group.model.js";
 
 export const createGroup = async (req, res) => {
   const { nameGroup, descripcion } = req.body;
@@ -9,7 +9,7 @@ export const createGroup = async (req, res) => {
     return res.status(500), json({ message: "no se permiten campos vacios" });
   }
   try {
-    const created = await Group.create({ nameGroup, descripcion });
+    const created = await GroupModel.create({ nameGroup, descripcion });
     res.status(201).json("se creo el grupo", created);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -18,7 +18,7 @@ export const createGroup = async (req, res) => {
 
 export const getAllGroups = async (req, res) => {
   try {
-    const groups = await Group.findAll();
+    const groups = await GroupModel.findAll();
     res.json(groups);
   } catch (error) {
     res.status(500).json({ erroR: error.message });
