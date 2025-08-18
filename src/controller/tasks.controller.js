@@ -15,7 +15,7 @@ export const createTasks = async (req, res) => {
   //   return res.status(401).json({ message: "no existe un usuario con ese id" });
   // }
 
-  if (title === "" || title === undefined) {
+  if (title === "") {
     return res.status(401).json({ Message: "no se permiten campos vacios" });
   }
   const titletab = await TasksModel.findOne({ where: { title } });

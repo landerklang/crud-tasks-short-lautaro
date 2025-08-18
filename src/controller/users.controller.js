@@ -56,7 +56,6 @@ export const getAllUsers = async (req, res) => {
         { model: GroupModel, as: "groups" },
       ],
     });
-    console.log(user.Task);
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
