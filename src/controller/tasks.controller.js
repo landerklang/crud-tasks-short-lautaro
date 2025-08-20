@@ -68,7 +68,7 @@ export const getAllTask = async (req, res) => {
         {
           model: UserModel,
           as: "author",
-          attributes: { exclude: ["password", "email"] },
+          attributes: { exclude: ["password", "email", "id"] },
         },
       ],
     });

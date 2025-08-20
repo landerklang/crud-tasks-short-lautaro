@@ -35,7 +35,7 @@ export const getAllValidcode = async (req, res) => {
         {
           model: UserModel,
           as: "person",
-          attributes: { exclude: ["email", "password"] },
+          attributes: { exclude: ["email", "password", "id"] },
         },
       ],
     });
