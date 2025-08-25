@@ -10,7 +10,7 @@ export const createGroup = async (req, res) => {
   }
   try {
     const created = await GroupModel.create({ nameGroup, descripcion });
-    res.status(201).json("se creo el grupo", created);
+    res.status(201).json(created, " Grupo creado con exito");
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

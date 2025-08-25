@@ -28,6 +28,10 @@ export const createdUsers = async (req, res) => {
       .status(401)
       .json({ message: "no se permiten mas de 100 caracteres en el gmail" });
   }
+  const emailTab = await UserModel.findOne({ where: { email } });
+  if (emailTab) {
+    return res.json({ message: "ya existe un usuario con el mismo gmail" });
+  }
 
   if (password === "") {
     return res.status(401).json({ message: "no se permiten campos vacios" });
@@ -42,7 +46,7 @@ export const createdUsers = async (req, res) => {
   try {
     const user = await UserModel.create(req.body);
     // console.log(user);
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -106,7 +110,9 @@ export const updateUsers = async (req, res) => {
 
 export const deleteUsers = async (req, res) => {
   try {
-    const deleted = await UserModel.destroy({ where: { id: req.params.id } });
+    const deleted = await UserModel.destroy({
+      where: { user_id: req.params.id },
+    });
     if (deleted) {
       res.json({ message: "se elimino usuario de forma exitosa" });
     } else return res.status(404).json({ message: "usuario no encontrado" });

@@ -13,6 +13,10 @@ const ValidCodeModel = sequelize.define(
   }
 );
 
-ValidCodeModel.belongsTo(UserModel, { foreignKey: "user_id", as: "person" });
+ValidCodeModel.belongsTo(UserModel, {
+  foreignKey: "user_id",
+  as: "person",
+  onDelete: "CASCADE",
+});
 UserModel.hasOne(ValidCodeModel, { foreignKey: "user_id", as: "person" });
 export default ValidCodeModel;

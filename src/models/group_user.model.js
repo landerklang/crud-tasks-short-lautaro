@@ -4,10 +4,19 @@ import UserModel from "./user.model.js";
 import GroupModel from "./group.model.js";
 
 const GroupUserModel = sequelize.define(
-  "Group_User"
-  //   {
-  //     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  //   },
+  "Group_User",
+  {
+    group_user_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+  },
+  {
+    timestamps: true,
+    paranoid: true,
+  }
+
   //   {
   //     timestamps: false,
   //   }

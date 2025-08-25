@@ -40,3 +40,8 @@ export const getAllGroupsUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const destroyGroupUser = async (req, res) => {
+  try {
+  } catch (error) {}
+};
