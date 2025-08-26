@@ -1,6 +1,5 @@
 import ValidCodeModel from "../models/valid_code.model.js";
 import UserModel from "../models/user.model.js";
-import { where } from "sequelize";
 
 export const createdValidCode = async (req, res) => {
   const { code, telefono, user_id } = req.body;
@@ -81,9 +80,7 @@ export const updateValidCode = async (req, res) => {
       const updateCode = await ValidCodeModel.findByPk(
         req.params.valid_code_id
       );
-      res
-        .status(updateCode)
-        .json({ message: "se actualizo el codigo de validacion con exito" });
+      res.json(updateCode);
     } else
       return res
         .status(404)
@@ -105,6 +102,6 @@ export const deletedValidCode = async (req, res) => {
         .status(404)
         .json({ message: "no se encontro el codigo de validacion" });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };

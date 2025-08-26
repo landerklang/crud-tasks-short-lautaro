@@ -5,7 +5,7 @@ import GroupModel from "../models/group.model.js";
 export const create_Group_User = async (req, res) => {
   const { user_id, group_id, group_user_id } = req.body;
   if (user_id === "" || group_id === "") {
-    return res.status(500).json({
+    return res.status(400).json({
       message: "debe existir un usuario y un grupo para crear el campo ",
     });
   }

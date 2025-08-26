@@ -6,26 +6,26 @@ export const createdUsers = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (name === "") {
-    res.status(401).json({ message: "no se permiten campos vacios" });
+    res.status(400).json({ message: "no se permiten campos vacios" });
   }
   if (typeof name !== "string") {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "solo se permiten datos de tipo string " });
   }
   const namelength = name.length;
   if (namelength > 100) {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "no se permiten mas de 100 caracteres en el nombre" });
   }
   if (email === "") {
-    return res.status(401).json({ message: "no se permiten campos vacios" });
+    return res.status(400).json({ message: "no se permiten campos vacios" });
   }
   const emailength = email.length;
   if (emailength > 100) {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "no se permiten mas de 100 caracteres en el gmail" });
   }
   const emailTab = await UserModel.findOne({ where: { email } });
@@ -34,11 +34,11 @@ export const createdUsers = async (req, res) => {
   }
 
   if (password === "") {
-    return res.status(401).json({ message: "no se permiten campos vacios" });
+    return res.status(400).json({ message: "no se permiten campos vacios" });
   }
   const passwordlength = password.length;
   if (passwordlength > 100) {
-    return res.status(401).json({
+    return res.status(400).json({
       message:
         "no se permiten en los campos de contraseña mas de 100 caracteres",
     });
@@ -46,7 +46,7 @@ export const createdUsers = async (req, res) => {
   try {
     const user = await UserModel.create(req.body);
     // console.log(user);
-    res.status(200).json(user);
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

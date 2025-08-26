@@ -5,22 +5,22 @@ export const createTasks = async (req, res) => {
   const { title, description, isComplete, user_id } = req.body;
 
   if (user_id === undefined) {
-    return res.status(401).json({ message: "no se permite campos vacios" });
+    return res.status(400).json({ message: "no se permite campos vacios" });
   }
   const iduser = await UserModel.findByPk(user_id);
   if (iduser === null) {
-    return res.status(401).json({ message: "no existe un usuario con ese id" });
+    return res.status(400).json({ message: "no existe un usuario con ese id" });
   }
   // if (user_id === req.params.id) {
   //   return res.status(401).json({ message: "no existe un usuario con ese id" });
   // }
 
   if (title === "") {
-    return res.status(401).json({ Message: "no se permiten campos vacios" });
+    return res.status(400).json({ Message: "no se permiten campos vacios" });
   }
   const titletab = await TasksModel.findOne({ where: { title } });
   if (titletab) {
-    return res.status(401).json({ message: "ya se utilizo este titulo" });
+    return res.status(400).json({ message: "ya se utilizo este titulo" });
   }
   ///tambien puede ser asi if (title.length > 100)
   const titlelengt = title.length;
@@ -30,20 +30,20 @@ export const createTasks = async (req, res) => {
       .json({ message: "no se permiten titulos mayores a 100 caracteres" });
   }
   if (description === "") {
-    return res.status(401).json({ message: "no se permiten campos vacios" });
+    return res.status(400).json({ message: "no se permiten campos vacios" });
   }
   const descriptionlengt = description.length;
   if (descriptionlengt > 100) {
-    return res.status(401).json({
+    return res.status(400).json({
       message: "no se permiten descripciones mayores a 100 caracteres",
     });
   }
   if (isComplete === "") {
-    return res.status(401).json({ message: "no se permiten campos vacios" });
+    return res.status(400).json({ message: "no se permiten campos vacios" });
   }
   if (typeof isComplete !== "boolean") {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "solo se permiten datos verdadero o falso" });
   }
   try {
@@ -102,7 +102,7 @@ export const updateTask = async (req, res) => {
   const titleTab = await TasksModel.findOne({ where: { title } });
   if (titleTab) {
     return res
-      .status(500)
+      .status(400)
       .json({ message: "ya existe un campo con ese titulo" });
   }
   try {
