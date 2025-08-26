@@ -1,5 +1,6 @@
 import GroupModel from "../models/group.model.js";
 import UserModel from "../models/user.model.js";
+import GroupUserModel from "../models/group_user.model.js";
 
 export const createGroup = async (req, res) => {
   const { nameGroup, descripcion } = req.body;
@@ -19,17 +20,18 @@ export const createGroup = async (req, res) => {
 
 export const getGroupById = async (req, res) => {
   try {
-    const getGroup = await GroupModel.findByPk(req.body.id, {
+    const getGroup = await GroupModel.findByPk(req.params.group_id, {
       include: [
         {
-          Model: UserModel,
+          model: UserModel,
           as: "users",
           attributes: { exclude: ["password", "email"] },
         },
       ],
     });
-    if (getGroup) res.json(getGroup);
-    else return res.status(404).json({ message: "no se encontro al grupo" });
+    if (getGroup) {
+      res.json(getGroup);
+    } else return res.status(404).json({ message: "no se encontro al grupo" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -46,11 +48,11 @@ export const getAllGroups = async (req, res) => {
 
 export const updatedGroup = async (req, res) => {
   try {
-    const [update] = await GroupModel.update(req.params, {
-      where: { id: req.params.id },
+    const [update] = await GroupModel.update(req.body, {
+      where: { group_id: req.params.group_id },
     });
     if (update) {
-      const updatedgroup = await GroupModel.findByPk(req.params.id);
+      const updatedgroup = await GroupModel.findByPk(req.params.group_id);
       res.json(updatedgroup);
     } else return res.status(404).json({ message: "no se encontro al grupo" });
   } catch (error) {
@@ -61,7 +63,7 @@ export const updatedGroup = async (req, res) => {
 export const deletedGroup = async (req, res) => {
   try {
     const deleted = await GroupModel.destroy({
-      where: { id: res.params.id },
+      where: { group_id: req.params.group_id },
     });
     if (deleted) res.json({ message: "se elimino con exito al grupo" });
     else return res.status(404).json({ message: "no se encontro el grupo" });

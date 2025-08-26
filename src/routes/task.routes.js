@@ -13,10 +13,10 @@ tasksRoutes.post("/tasks", createTasks);
 
 tasksRoutes.get("/tasks", getAllTask);
 
-tasksRoutes.get("/tasks/:id", getTaskById);
+tasksRoutes.get("/tasks/:task_id", getTaskById);
 
-tasksRoutes.put("/tasks/:id", updateTask);
+tasksRoutes.put("/tasks/:task_id", updateTask);
 
-tasksRoutes.delete("/tasks/:id", deleteTask);
+tasksRoutes.delete("/tasks/:task_id", deleteTask);
 
 export default tasksRoutes;

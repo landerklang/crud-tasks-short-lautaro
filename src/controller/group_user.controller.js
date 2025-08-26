@@ -4,10 +4,25 @@ import GroupModel from "../models/group.model.js";
 
 export const create_Group_User = async (req, res) => {
   const { user_id, group_id, group_user_id } = req.body;
-  if (!user_id || group_id === "") {
+  if (user_id === "" || group_id === "") {
     return res.status(500).json({
       message: "debe existir un usuario y un grupo para crear el campo ",
     });
+  }
+  const iduser = await UserModel.findByPk(user_id);
+  if (iduser === null) {
+    return res.status(404).json({ message: "no existe un usuario con ese id" });
+  }
+  const idgroup = await GroupModel.findByPk(group_id);
+  if (idgroup === null) {
+    return res.status(404).json({ message: "no existen un grupo con ese id" });
+  }
+  const idgrouptab = await GroupUserModel.findOne({ where: { group_id } });
+  const idusertab = await UserModel.findOne({ where: { user_id } });
+  if (idusertab && idgrouptab) {
+    return res
+      .status(400)
+      .json({ message: "ya existe un grupo y usuario con ese id" });
   }
   try {
     const crear = await GroupUserModel.create({
@@ -28,14 +43,12 @@ export const getAllGroupsUser = async (req, res) => {
         {
           model: UserModel,
           as: "user",
-          attributes: { exclude: ["password", "email"] },
+          attributes: { exclude: ["passwo", "email"] },
         },
-      ],
-      include: [
         {
           model: GroupModel,
           as: "group",
-          attributes: { exclude: ["nameGroups", "descripcion"] },
+          attributes: { exclude: ["nameGroup", "descripcion"] },
         },
       ],
     });
@@ -54,8 +67,6 @@ export const getGroupUserById = async (req, res) => {
           as: "user",
           actributes: { exclude: ["password", "email"] },
         },
-      ],
-      include: [
         {
           model: GroupModel,
           as: "group",
@@ -74,6 +85,13 @@ export const getGroupUserById = async (req, res) => {
 
 export const updateGroupUser = async (req, res) => {
   try {
+    // const idgrouptab = await GroupUserModel.findOne({ where: { group_id } });
+    // const idusertab = await UserModel.findOne({ where: { user_id } });
+    // if (idusertab && idgrouptab) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "ya existe un grupo y usuario con ese id" });
+    // }
     const [update] = await GroupUserModel.update(req.body, {
       where: { group_user_id: req.params.group_user_id },
     });

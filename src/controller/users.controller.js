@@ -68,7 +68,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getUsersById = async (req, res) => {
   try {
-    const user = await UserModel.findByPk(req.params.id, {
+    const user = await UserModel.findByPk(req.params.user_id, {
       include: [
         {
           model: TasksModel,
@@ -95,10 +95,10 @@ export const updateUsers = async (req, res) => {
   //user gmail existente
   try {
     const [update] = await UserModel.update(req.body, {
-      where: { id: req.params.id },
+      where: { user_id: req.params.user_id },
     });
     if (update) {
-      const updatedUsers = await UserModel.findByPk(req.params.id);
+      const updatedUsers = await UserModel.findByPk(req.params.user_id);
       res.json(updatedUsers);
     } else {
       res.status(404).json({ message: "usuario no encontrado" });
@@ -111,7 +111,7 @@ export const updateUsers = async (req, res) => {
 export const deleteUsers = async (req, res) => {
   try {
     const deleted = await UserModel.destroy({
-      where: { user_id: req.params.id },
+      where: { user_id: req.params.user_id },
     });
     if (deleted) {
       res.json({ message: "se elimino usuario de forma exitosa" });

@@ -4,6 +4,12 @@ import UserModel from "./user.model.js";
 const TasksModel = sequelize.define(
   "TasksModel",
   {
+    task_id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
     title: { type: DataTypes.STRING(100), unique: true, allowNull: false },
     description: { type: DataTypes.STRING(100), allowNull: false },
     isComplete: {

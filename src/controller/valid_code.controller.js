@@ -1,5 +1,6 @@
 import ValidCodeModel from "../models/valid_code.model.js";
 import UserModel from "../models/user.model.js";
+import { where } from "sequelize";
 
 export const createdValidCode = async (req, res) => {
   const { code, telefono, user_id } = req.body;
@@ -10,6 +11,13 @@ export const createdValidCode = async (req, res) => {
   if (telefono === "") {
     return res.status(500).json({ mesage: "no se permiten campos vacios" });
   }
+  const codetab = await ValidCodeModel.findOne({ where: { code } });
+  if (codetab) {
+    return res
+      .status(500)
+      .json({ message: "ya existe un codigo de validacion igual" });
+  }
+
   const iduser = await UserModel.findByPk(user_id);
   if (!iduser) {
     return res.status(500).json({
@@ -30,7 +38,7 @@ export const createdValidCode = async (req, res) => {
 
 export const getValidCode = async (req, res) => {
   try {
-    const getvalidcode = await ValidCodeModel.findByPk(req.params.id, {
+    const getcode = await ValidCodeModel.findByPk(req.params.valid_code_id, {
       include: [
         {
           model: UserModel,
@@ -39,8 +47,9 @@ export const getValidCode = async (req, res) => {
         },
       ],
     });
-    if (getvalidcode) res.json(getAllValidcode);
-    else return res.status(404).json({ message: "no se encontro el codigo" });
+    if (getcode) {
+      res.json(getcode);
+    } else return res.status(404).json({ message: "no se encontro el codigo" });
   } catch (error) {
     res.status(500).json({ error: error.mesage });
   }
@@ -53,7 +62,7 @@ export const getAllValidCode = async (req, res) => {
         {
           model: UserModel,
           as: "person",
-          attributes: { exclude: ["email", "password", "id"] },
+          attributes: { exclude: ["email", "password", "user_id"] },
         },
       ],
     });
@@ -66,10 +75,12 @@ export const getAllValidCode = async (req, res) => {
 export const updateValidCode = async (req, res) => {
   try {
     const [update] = await ValidCodeModel.update(req.body, {
-      where: { id: req.params.id },
+      where: { valid_code_id: req.params.valid_code_id },
     });
     if (update) {
-      const updateCode = await ValidCodeModel.findByPk(req.params.id);
+      const updateCode = await ValidCodeModel.findByPk(
+        req.params.valid_code_id
+      );
       res
         .status(updateCode)
         .json({ message: "se actualizo el codigo de validacion con exito" });
@@ -85,7 +96,7 @@ export const updateValidCode = async (req, res) => {
 export const deletedValidCode = async (req, res) => {
   try {
     const deletedcode = await ValidCodeModel.destroy({
-      where: { id: req.params.id },
+      where: { valid_code_id: req.params.valid_code_id },
     });
     if (deletedcode)
       res.json({ message: "se elimino el codigo de validacion" });

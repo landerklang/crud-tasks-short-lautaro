@@ -13,10 +13,10 @@ groupsRoutes.post("/groups", createGroup);
 
 groupsRoutes.get("/groups", getAllGroups);
 
-groupsRoutes.get("/groups/:id", getGroupById);
+groupsRoutes.get("/groups/:group_id", getGroupById);
 
-groupsRoutes.delete("/groups/:id", deletedGroup);
+groupsRoutes.delete("/groups/:group_id", deletedGroup);
 
-groupsRoutes.put("/groups/:id", updatedGroup);
+groupsRoutes.put("/groups/:group_id", updatedGroup);
 
 export default groupsRoutes;

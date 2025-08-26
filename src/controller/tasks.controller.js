@@ -68,7 +68,7 @@ export const getAllTask = async (req, res) => {
         {
           model: UserModel,
           as: "author",
-          attributes: { exclude: ["password", "email", "id"] },
+          attributes: { exclude: ["password", "email", "user_id"] },
         },
       ],
     });
@@ -80,7 +80,7 @@ export const getAllTask = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const tasks = await TasksModel.findByPk(req.params.id, {
+    const tasks = await TasksModel.findByPk(req.params.task_id, {
       include: [
         {
           model: UserModel,
@@ -107,10 +107,10 @@ export const updateTask = async (req, res) => {
   }
   try {
     const [update] = await TasksModel.update(req.body, {
-      where: { id: req.params.id },
+      where: { task_id: req.params.task_id },
     });
     if (update) {
-      const updatedtask = await TasksModel.findByPk(req.params.id);
+      const updatedtask = await TasksModel.findByPk(req.params.task_id);
       res.json(updatedtask);
     } else {
       res.status(404).json({ message: "no se encontro la tarea " });
@@ -122,7 +122,9 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
-    const deleted = await TasksModel.destroy({ where: { id: req.params.id } });
+    const deleted = await TasksModel.destroy({
+      where: { task_id: req.params.task_id },
+    });
     if (deleted) {
       res.status(201).json({ message: "se elimino la tarea de forma exitosa" });
     } else return res.status(404).json({ message: "no se encontro la tarea" });

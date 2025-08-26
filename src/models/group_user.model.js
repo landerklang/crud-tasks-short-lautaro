@@ -15,6 +15,8 @@ const GroupUserModel = sequelize.define(
   {
     timestamps: true,
     paranoid: true,
+    createdAt: false,
+    updatedAt: false,
   }
 
   //   {

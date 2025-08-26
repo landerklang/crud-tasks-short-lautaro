@@ -5,6 +5,12 @@ import UserModel from "./user.model.js";
 const ValidCodeModel = sequelize.define(
   "Valid_code",
   {
+    valid_code_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     code: { type: DataTypes.STRING, allowNull: false },
     telefono: { type: DataTypes.INTEGER, allowNull: false },
   },
