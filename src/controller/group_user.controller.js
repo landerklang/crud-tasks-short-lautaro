@@ -32,7 +32,7 @@ export const create_Group_User = async (req, res) => {
     });
     res.status(201).json(crear);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "no se pudo crear " });
   }
 };
 
@@ -54,7 +54,9 @@ export const getAllGroupsUser = async (req, res) => {
     });
     res.json(groupuser);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "no se pudo traer todos los grupos de usuario" });
   }
 };
 
@@ -77,9 +79,11 @@ export const getGroupUserById = async (req, res) => {
     else
       return res
         .status(404)
-        .json({ message: "no se encontro elgrupo y usuario" });
+        .json({ message: "no se encontro el grupo y usuario" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "no se pudo traer al grupo y al usuario " });
   }
 };
 
