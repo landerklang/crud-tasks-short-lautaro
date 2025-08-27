@@ -41,11 +41,12 @@ export const createTasks = async (req, res) => {
   if (isComplete === "") {
     return res.status(400).json({ message: "no se permiten campos vacios" });
   }
-  if (typeof isComplete !== "boolean") {
-    return res
-      .status(400)
-      .json({ message: "solo se permiten datos verdadero o falso" });
-  }
+  // if (typeof isComplete !== "boolean") {
+  //   console.log(typeof isComplete);
+  //   return res
+  //     .status(400)
+  //     .json({ message: "solo se permiten datos verdadero o falso" });
+  // }
   try {
     const task = await TasksModel.create({
       title,
@@ -90,7 +91,7 @@ export const getTaskById = async (req, res) => {
       ],
     });
     if (tasks) res.json(tasks);
-    else res.status(404).json({ message: "no se a encontrado la tarea" });
+    // else res.status(404).json({ message: "no se a encontrado la tarea" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
