@@ -21,8 +21,20 @@ const ValidCodeModel = sequelize.define(
 
 ValidCodeModel.belongsTo(UserModel, {
   foreignKey: "user_id",
-  as: "person",
+  as: "user",
   onDelete: "CASCADE",
 });
-UserModel.hasOne(ValidCodeModel, { foreignKey: "user_id", as: "person" });
+UserModel.hasOne(ValidCodeModel, {
+  foreignKey: "valid_code_id",
+  as: "code_valid",
+});
+
+UserModel.addHook("afterDestroy", async (user) => {
+  const code_valid = await ValidCodeModel.findOne({
+    where: { person: user.dataValues.id },
+  });
+  await code_valid.destroy();
+});
 export default ValidCodeModel;
+
+///el afterbulkdestroy sirve solamente si quieres eliminas mas de un regristro
