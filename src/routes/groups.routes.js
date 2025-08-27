@@ -6,17 +6,39 @@ import {
   deletedGroup,
   updatedGroup,
 } from "../controller/group.controller.js";
+import {
+  createGroupValidation,
+  getAllGroupsValidations,
+  getGroupsByIdValidations,
+  deletedGroupValidation,
+  updateGroupValidations,
+} from "../middlewares/validations/group.validations.js";
 
 const groupsRoutes = express.Router();
 
-groupsRoutes.post("/groups", createGroup);
+groupsRoutes.post("/groups", createGroupValidation, validator, createGroup);
 
-groupsRoutes.get("/groups", getAllGroups);
+groupsRoutes.get("/groups", getAllGroupsValidations, validator, getAllGroups);
 
-groupsRoutes.get("/groups/:group_id", getGroupById);
+groupsRoutes.get(
+  "/groups/:group_id",
+  getGroupsByIdValidations,
+  validator,
+  getGroupById
+);
 
-groupsRoutes.delete("/groups/:group_id", deletedGroup);
+groupsRoutes.delete(
+  "/groups/:group_id",
+  deletedGroupValidation,
+  validator,
+  deletedGroup
+);
 
-groupsRoutes.put("/groups/:group_id", updatedGroup);
+groupsRoutes.put(
+  "/groups/:group_id",
+  updateGroupValidations,
+  validator,
+  updatedGroup
+);
 
 export default groupsRoutes;
