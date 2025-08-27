@@ -68,7 +68,7 @@ export const updateUserValidations = [
     .withMessage("el email debe tener entre 1 a 100 caracteres")
     .custom(async (value) => {
       const emailtab = await UserModel.findOne({ where: { email: value } });
-      if (!emailtab) {
+      if (emailtab) {
         throw new Error("ya existe un gmail con este nombre");
       }
     }),

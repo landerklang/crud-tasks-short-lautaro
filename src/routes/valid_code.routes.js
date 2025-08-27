@@ -13,6 +13,7 @@ import {
   updateValidCodeValidation,
   deletedValidCodeValidation,
 } from "../middlewares/validations/valid_code.validations.js";
+import { validator } from "../middlewares/validator.js";
 
 export const router_valid_code = express.Router();
 
@@ -46,7 +47,7 @@ router_valid_code.delete(
 
 router_valid_code.put(
   "/valid_code/:valid_code_id",
-  updateValidCode,
+  updateValidCodeValidation,
   validator,
   updateValidCode
 );

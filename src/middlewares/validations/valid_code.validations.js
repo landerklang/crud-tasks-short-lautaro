@@ -10,7 +10,7 @@ export const createValidCodeValidations = [
     .withMessage("el code debe ser cadena de caracteres")
     .custom(async (value) => {
       const codetab = await ValidCodeModel.findOne({ where: { code: value } });
-      if (!codetab) {
+      if (codetab) {
         throw new Error("ya existe un usuario con ese codigo");
       }
     }),

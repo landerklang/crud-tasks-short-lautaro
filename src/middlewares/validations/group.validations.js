@@ -12,7 +12,7 @@ export const createGroupValidation = [
       const nameGroupDB = await GroupModel.findOne({
         where: { nameGroup: value },
       });
-      if (!nameGroupDB) {
+      if (nameGroupDB) {
         throw new Error("ya existe un grupo con ese nombre");
       }
     }),

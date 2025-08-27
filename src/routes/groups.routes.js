@@ -13,6 +13,7 @@ import {
   deletedGroupValidation,
   updateGroupValidations,
 } from "../middlewares/validations/group.validations.js";
+import { validator } from "../middlewares/validator.js";
 
 const groupsRoutes = express.Router();
 
